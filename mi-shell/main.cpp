@@ -1,7 +1,6 @@
 #include "MIShell.h"
 
-int main()
-{
-	MIShell myShell;
-	myShell.run();
+int main() {
+	MIShell miShell;
+	miShell.run();
 }

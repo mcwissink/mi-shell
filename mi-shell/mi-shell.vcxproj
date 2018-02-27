@@ -23,6 +23,7 @@
     <ProjectGuid>{315861BE-4CA0-4187-997C-7C578BEE6B1E}</ProjectGuid>
     <RootNamespace>mishell</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <ProjectName>MIShell</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

@@ -1,12 +1,13 @@
 #include "MIShell.h"
 #include "iostream"
+using namespace std;
 
 MIShell::MIShell() {
 	// Constructor stub	
 }
 
 void MIShell::run() {
-	std::cout << "Press Enter to exit...";
-	std::cin.get();
+	cout << "Press Enter to exit...";
+	cin.get();
 }
 
