@@ -1,12 +1,7 @@
 #include "Path.h"
 
-Path::Path() {
-}
+Path::Path() {}
 
-int Path::find(const std::string& program) const {
+int Path::find(const std::string& program) const {}
 
-}
-
-std::string Path::getDirectory(int i) const {
-
-}
+std::string Path::getDirectory(int i) const {}
