@@ -52,7 +52,7 @@ char* CommandLine::getArgVector(int i) const {
 
 bool CommandLine::noAmpersand() const {
   for(int i=0; i<argc; i++) {
-    if(argv[i] == "&") {
+    if(*argv[i] == '&') {
       return false;
     }
   }

@@ -20,15 +20,15 @@ Path::Path() {
 int Path::find(const std::string& program) const {
   DIR *dir;
   struct dirent *dp;
-  
+
   // Loop through all the directories in our path
   for (size_t i = 0; i < dirs.size(); i++) {
     // Open the directory
     if ((dir = opendir(dirs[i].c_str())) == NULL) {
       perror("Cannot open directory");
       return -1;
-    } 
-    
+    }
+
     // Run until we close the directory
     while (dir) {
       if ((dp = readdir(dir)) != NULL) {
@@ -50,7 +50,8 @@ int Path::find(const std::string& program) const {
         return -1;
       }
     }
-  } 
+  }
+  return -1;
 };
 
 std::string Path::getDirectory(int i) const {
