@@ -7,10 +7,10 @@ CommandLine::CommandLine(char* teststring) {
   char *command = teststring;
   setArgC(command);
   argv = (char**)calloc(argc, sizeof(char*));
-  fillArgVector(command);
 }
 
 void CommandLine::setArgC(char* commandString) {
+  argc = 0;
   char previousChar = ' ';
   char currentChar;
   for(int i=0; i<sizeof(commandString); i++) {
