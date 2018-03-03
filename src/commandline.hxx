@@ -13,5 +13,5 @@ class CommandLine {
     bool noAmpersand() const;
   private:
     int argc;
-    std::vector<char*> argv;
+    char** argv;
 };
