@@ -1,9 +1,9 @@
 #pragma once
 #include <string>
 
-class prompt {
+class Prompt {
   public:
-    prompt();
+    Prompt();
     std::string get() const;
 };
 

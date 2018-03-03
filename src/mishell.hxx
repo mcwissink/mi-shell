@@ -1,9 +1,13 @@
 #pragma once
-#include <iostream>
+#include "path.hxx"
+#include "prompt.hxx"
 
-class mishell {
+class MIShell {
   public:
-    mishell();
+    MIShell();
     void run();
+  private:
+    Path *myPath;
+    Prompt *myPrompt;
 };
 

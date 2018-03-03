@@ -1,8 +1,12 @@
 #include "mishell.hxx"
+#include <iostream>
 
-mishell::mishell() {}
+MIShell::MIShell() {
+  myPath = new Path();
+  myPrompt = new Prompt(); 
+}
 
-void mishell::run() {
+void MIShell::run() {
 	std::cout << "Press Enter to exit...";
 	std::cin.get();
 }

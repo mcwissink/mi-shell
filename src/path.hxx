@@ -1,12 +1,13 @@
 #pragma once
-#include <stdio.h>
-#include <stdlib.h>
+#include <vector>
 #include <string>
 
-class path {
+class Path {
   public:
-    path();
+    Path();
     int find(const std::string& program) const;
     std::string getDirectory(int i) const;
+  private:
+    std::vector<std::string> dirs;
 };
 

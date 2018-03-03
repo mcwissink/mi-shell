@@ -1,6 +1,6 @@
 #include "mishell.hxx"
 
 int main() {
-	mishell miShell;
+	MIShell miShell;
 	miShell.run();
 }

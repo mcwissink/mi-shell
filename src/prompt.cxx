@@ -1,6 +1,6 @@
 #include "prompt.hxx"
 
-prompt::prompt() {}
+Prompt::Prompt() {}
 
-//std::string prompt::get() const {}; 
+//std::string Prompt::get() const {}; 
 
