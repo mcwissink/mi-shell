@@ -2,8 +2,8 @@
 #include "shelltests.hxx"
 
 int main() {
-	ShellTests shelltests;
-	ShellTests.testAll();
+	ShellTests shellTests;
+	shellTests.testAll();
 	/*
 	MIShell miShell;
 	miShell.run();

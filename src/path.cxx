@@ -24,8 +24,8 @@ int Path::find(const std::string& program) const {
   // Loop through all the directories in our path
   for (size_t i = 0; i < dirs.size(); i++) {
     // Open the directory
-    if ((dir = opendir(dirs[i]) == NULL) {
-      perror("Cannot open %s", dirs[i]);
+    if ((dir = opendir(dirs[i].c_str())) == NULL) {
+      perror("Cannot open directory");
       return -1;
     } 
     

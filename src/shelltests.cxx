@@ -1,6 +1,7 @@
 #include "shelltests.hxx"
+using namespace std;
 
-public void ShellTests::testAll() {
+void ShellTests::testAll() {
   cout << "Testing stuff..." << endl;
   testCommandLine();
   testPath();
@@ -8,17 +9,17 @@ public void ShellTests::testAll() {
   cout << "Tests passed..." << endl;
 }
 
-private void ShellTests::testPath() {
+void ShellTests::testPath() {
 
 }
 
-private void ShellTests::testPrompt() {
+void ShellTests::testPrompt() {
 
 }
 
-private void ShellTests::testCommandLine() {
-  cout << "Testing CommandLine... "
-  CommandLine cl("emacs ruby.py &");
+void ShellTests::testCommandLine() {
+  cout << "Testing CommandLine... ";
+  CommandLine cl((char*)"emacs ruby.py &");
   assert(cl.getArgCount() == 3);
   assert(cl.getCommand() == "emacs");
   assert(cl.getArgVector(0) == "emacs");

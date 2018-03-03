@@ -1,30 +1,32 @@
-#include "commandine.hxx"
+#include "commandline.hxx"
+
+#include <stdlib.h>
 
 CommandLine::CommandLine(char* teststring) {
-  char* command >> in;
+  //char* command >> in;
+  char *command = teststring;
   setArgC(command);
-  argv = calloc(argc, 64);
+  argv = (char**)calloc(argc, sizeof(char*));
   fillArgVector(command);
 }
 
-private void CommandLine::setArgC(char* commandString) {
-  char previousChar = " ";
+void CommandLine::setArgC(char* commandString) {
+  char previousChar = ' ';
   char currentChar;
-  for(i=0; i<sizeof(commandString); i++) {
+  for(int i=0; i<sizeof(commandString); i++) {
     currentChar = commandString[i];
-    if(previousChar == " ") {
-      if(currentChar != " ") {
-        argc += 1
+    if(previousChar == ' ') {
+      if(currentChar != ' ') {
+        argc += 1;
       }
     }
     previousChar = currentChar;
   }
-  return argc;
 }
 
-private void CommandLine::fillArgVector(char* commandString) {
+void CommandLine::fillArgVector(char* commandString) {
   int i = 0;
-  char* token = strtok(command, " ");
+  char* token = strtok(commandString, " ");
   while(token != NULL) {
     argv[i] = token;
     i++;
@@ -32,24 +34,24 @@ private void CommandLine::fillArgVector(char* commandString) {
   }
 }
 
-public char* CommandLine::getCommand() const {
+char* CommandLine::getCommand() const {
   return argv[0];
 }
 
-public int CommandLine::getArgCount() const {
+int CommandLine::getArgCount() const {
   return argc;
 }
 
-public char** CommandLine::getArgVector() const {
+char** CommandLine::getArgVector() const {
   return argv;
 }
 
-public char* CommandLine::getArgVector(int i) const {
+char* CommandLine::getArgVector(int i) const {
   return argv[i];
 }
 
-public bool CommandLine::noAmpersand() const {
-  for(i=0; i<argc; i++) {
+bool CommandLine::noAmpersand() const {
+  for(int i=0; i<argc; i++) {
     if(argv[i] == "&") {
       return false;
     }

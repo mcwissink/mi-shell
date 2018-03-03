@@ -1,11 +1,15 @@
+#pragma once
+
 #include "commandline.hxx"
 #include "path.hxx"
 #include "prompt.hxx"
 #include <cassert>
 
-class shellTests {
+class ShellTests {
+public:
   void testAll();
+private:
   void testPath();
   void testPrompt();
   void testCommandLine();
-}
+};
