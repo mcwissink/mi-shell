@@ -2,12 +2,14 @@
 #include <iostream>
 
 MIShell::MIShell() {
-  myPath = new Path();
-  myPrompt = new Prompt(); 
+  path = Path();
+  std::cout << Prompt().get() << std::endl; 
 }
 
 void MIShell::run() {
-	std::cout << "Press Enter to exit...";
-	std::cin.get();
+  //std::cout << "Press Enter to exit...";
+  //std::cin.get();
+  while(1) {
+  }
 }
 

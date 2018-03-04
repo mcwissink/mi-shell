@@ -5,5 +5,7 @@ class Prompt {
   public:
     Prompt();
     std::string get() const;
+  private:
+    std::string fullPath;
 };
 

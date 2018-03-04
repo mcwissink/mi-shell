@@ -7,7 +7,6 @@ class MIShell {
     MIShell();
     void run();
   private:
-    Path *myPath;
-    Prompt *myPrompt;
+    Path path;
 };
 
