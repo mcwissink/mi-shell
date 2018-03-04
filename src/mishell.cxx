@@ -6,6 +6,7 @@
  */
 
 #include "mishell.hxx"
+#include "commandline.hxx"
 #include <iostream>
 
 MIShell::MIShell() {
@@ -18,9 +19,9 @@ MIShell::MIShell() {
  * @return void.
  */
 void MIShell::run() {
-  string command;
+  std::string command;
   while(1) {
-    std::cout << Prompt().get() << '>' << std::flush;
-    std::cin >> command;
+    std::cout << Prompt().get() << '$' << std::flush;
+    CommandLine cl(std::cin);
   }
 }

@@ -7,12 +7,33 @@
  
 #include "commandline.hxx"
 #include <stdlib.h>
+#include <sstream>
+
+CommandLine::CommandLine(std::istream& in) {
+  std::string command; // The entire command
+  std::string arg; // For storing args of the command
+  std::vector<char*> args; // Array of args
+
+  std::getline(in, command);
+  std::istringstream iss(command);
+  while (iss >> arg) {
+    char char_arg[arg.length() + 1];
+    args.push_back(strcpy(char_arg, arg.c_str()));
+    // cout for debuggin
+    std::cout << arg << std::endl;
+  }
+
+  argc = args.size();
+  argv = args.data();
+
+  std::cout << argc << ", " << argv << std::endl;
+}
 
 CommandLine::CommandLine(char* teststring) {
   //char* command >> in;
-  char *command = teststring;
-  setArgC(command);
-  argv = (char**)calloc(argc, sizeof(char*));
+  //char *command = teststring;
+  //setArgC(command);
+  //argv = (char**)calloc(argc, sizeof(char*));
 }
 
 void CommandLine::setArgC(char* commandString) {

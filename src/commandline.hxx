@@ -14,7 +14,8 @@
 #include <cstring>
 
 class CommandLine {
-  public:
+ public:
+    CommandLine(std::istream& in);
     CommandLine(char *teststring);
     char* getCommand() const;
     int getArgCount() const;
