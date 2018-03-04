@@ -4,33 +4,33 @@ using namespace std;
 void ShellTests::testAll() {
   cout << "Testing stuff..." << endl;
   testCommandLine();
-  testPath();
-  testPrompt();
   cout << "Tests passed..." << endl;
 }
 
-void ShellTests::testPath() {
-
-}
-
-void ShellTests::testPrompt() {
-
-}
-
 void ShellTests::testCommandLine() {
-  cout << "Testing CommandLine... ";
-  CommandLine cl((char*)"emacs ruby.py &");
-  cout << "1" << endl;
+  // tests command line with input "emacs ruby.py &"
+  cout << "Testing CommandLine... $";
+  CommandLine cl(std::cin);
   assert(cl.getArgCount() == 3);
-  cout << "2" << endl;
-  assert(cl.getCommand() == "emacs");
-  cout << "3" << endl;
-  assert(cl.getArgVector(0) == "emacs");
-  cout << "4" << endl;
-  assert(cl.getArgVector(1) == "ruby.py");
-  cout << "5" << endl;
-  assert(cl.getArgVector(2) == "&");
-  cout << "6" << endl;
+  assert(cl.getCommand()[0] == 'e');
+  assert(cl.getCommand()[1] == 'm');
+  assert(cl.getCommand()[2] == 'a');
+  assert(cl.getCommand()[3] == 'c');
+  assert(cl.getCommand()[4] == 's');
+  assert(cl.getArgVector(0)[0] == 'e');
+  assert(cl.getArgVector(0)[1] == 'm');
+  assert(cl.getArgVector(0)[2] == 'a');
+  assert(cl.getArgVector(0)[3] == 'c');
+  assert(cl.getArgVector(0)[4] == 's');
+  assert(cl.getArgVector(1)[0] == 'r');
+  assert(cl.getArgVector(1)[1] == 'u');
+  assert(cl.getArgVector(1)[2] == 'b');
+  assert(cl.getArgVector(1)[3] == 'y');
+  assert(cl.getArgVector(1)[4] == '.');
+  assert(cl.getArgVector(1)[5] == 'p');
+  assert(cl.getArgVector(1)[6] == 'y');
+  assert(cl.getArgVector(2)[0] == '&');
   assert(!cl.noAmpersand());
   cout << "passed..." << endl;
+  //note: all tests were passed 
 }

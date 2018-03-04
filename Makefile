@@ -1,6 +1,6 @@
 .PHONY: all clean
 all:
-	g++ -omishell ./src/*.cxx
+	g++ -Wall -omishell ./src/*.cxx
 clean:
 	rm -f mishell
  

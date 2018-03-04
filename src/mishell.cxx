@@ -23,5 +23,8 @@ void MIShell::run() {
   while(1) {
     std::cout << Prompt().get() << '$' << std::flush;
     CommandLine cl(std::cin);
+    if(command == "exit") {
+      exit(1);
+    }
   }
 }

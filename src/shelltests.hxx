@@ -9,7 +9,5 @@ class ShellTests {
 public:
   void testAll();
 private:
-  void testPath();
-  void testPrompt();
   void testCommandLine();
 };
