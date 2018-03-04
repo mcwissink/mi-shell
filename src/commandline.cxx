@@ -1,5 +1,11 @@
+/**
+ * CS-232
+ * commandline.cxx
+ * @author Mark Wissink
+ * @version 03/03/18
+ */
+ 
 #include "commandline.hxx"
-
 #include <stdlib.h>
 
 CommandLine::CommandLine(char* teststring) {

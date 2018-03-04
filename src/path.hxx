@@ -1,4 +1,14 @@
+/**
+ * CS-232
+ * path.cxx
+ * @author Mark Wissink
+ * @version 03/03/18
+ * Path
+ * Handles the PATH environement variable
+ */
+
 #pragma once
+
 #include <vector>
 #include <string>
 
@@ -10,4 +20,3 @@ class Path {
   private:
     std::vector<std::string> dirs;
 };
-

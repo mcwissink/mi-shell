@@ -1,3 +1,12 @@
+/**
+ * CS-232
+ * commandline.hxx
+ * @author Mark Wissink
+ * @version 03/03/18
+ * CommandLine
+ * Handles command and arguements input
+ */
+
 #pragma once
 
 #include <iostream>

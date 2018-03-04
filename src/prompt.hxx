@@ -1,4 +1,14 @@
+/**
+ * CS-232
+ * prompt.hxx
+ * @author Mark Wissink
+ * @version 03/03/18
+ * Prompt
+ * Get's the current working directory
+ */
+
 #pragma once
+
 #include <string>
 
 class Prompt {
@@ -6,6 +16,5 @@ class Prompt {
     Prompt();
     std::string get() const;
   private:
-    std::string fullPath;
+    std::string cwd;
 };
-

@@ -1,15 +1,26 @@
+/**
+ * CS-232
+ * mishell.cxx
+ * @author Mark Wissink
+ * @version 03/03/18
+ */
+
 #include "mishell.hxx"
 #include <iostream>
 
 MIShell::MIShell() {
   path = Path();
-  std::cout << Prompt().get() << std::endl; 
 }
 
+/**
+ * Runs and contains logic for the shell
+ * @param none.
+ * @return void.
+ */
 void MIShell::run() {
-  //std::cout << "Press Enter to exit...";
-  //std::cin.get();
+  string command;
   while(1) {
+    std::cout << Prompt().get() << '>' << std::flush;
+    std::cin >> command;
   }
 }
-
