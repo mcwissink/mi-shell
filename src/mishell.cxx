@@ -8,6 +8,9 @@
 #include "mishell.hxx"
 #include "commandline.hxx"
 #include <iostream>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 MIShell::MIShell() {
   path = Path();
@@ -21,10 +24,16 @@ MIShell::MIShell() {
 void MIShell::run() {
   std::string command;
   while(1) {
-    std::cout << Prompt().get() << '$' << std::flush;
+    std::cout << Prompt().get() << "$ " << std::flush;
     CommandLine cl(std::cin);
-    if(command == "exit") {
-      exit(1);
+    std::string directoryStr = path.getDirectory(path.find(cl.getCommand()));
+    char dir[directoryStr.size()];
+    strcpy(dir, directoryStr.c_str());
+    int pid = fork();
+    execv(dir, cl.getArgVector());
+    if(!cl.noAmpersand()) {
+      int* filler = NULL;
+      waitpid(pid, filler, 5);
     }
   }
 }

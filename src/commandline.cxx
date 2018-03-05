@@ -30,6 +30,7 @@ CommandLine::CommandLine(std::istream& in) {
   }
   char* char_token = (char*) calloc(command.length()+1, 1);
   results.push_back(strcpy(char_token, command.c_str()));
+  results.push_back(NULL);
 
   argc = results.size();
   argv = results.data();
@@ -77,4 +78,11 @@ bool CommandLine::noAmpersand() const {
     return false;
   }
   return true;
+}
+
+CommandLine::~CommandLine() {
+  for(int i=0; argv[i] != NULL; i++) {
+    free(argv[i]);
+  }
+  free(argv);
 }

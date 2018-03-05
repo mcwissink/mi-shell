@@ -21,6 +21,7 @@ class CommandLine {
     char** getArgVector() const;
     char* getArgVector(int i) const;
     bool noAmpersand() const;
+    ~CommandLine();
   private:
     int argc;
     char** argv;
