@@ -33,32 +33,23 @@ void MIShell::run() {
   {
     std::cout << Prompt().get() << "$ " << std::flush;
     CommandLine cl(std::cin);
-    std::string program = cl.getCommand();
-    int index = path.find(program);
-    std::string directoryStr = path.getDirectory(index);
-    std::cout << "program: " << program << ", index: " << index <<  directoryStr << std::endl;
-    char *dir = strdup(std::string(directoryStr + '/' + program).c_str());
-    std::cout << dir << std::endl;
-    char *argv[] = {"ls", NULL};
 
-    std::cout<< "This is the directory: " << dir << std::endl;
-
-
+    char* dir = strdup(std::string(path.getDirectory(path.find(cl.getCommand())) + '/' + cl.getCommand()).c_str());
+    char** argv = cl.getArgVector();
 
     pid_t pid = fork();
-    std::cout<< "We forked the children" << std::endl;
     int status;
 
     if (pid < 0) {
-      std::cout << "Fork failed" << std::endl;
+      //std::cout << "Fork failed" << std::endl;
     } else if (pid == 0) {
-      std::cout << "I am the child!" << std::endl;
+      //std::cout << "I am the child!" << std::endl;
       execve(dir, argv, NULL);
     } else {
       if (cl.noAmpersand()) {
-        std::cout << " -- waiting" << std::endl;
+        //std::cout << " -- waiting" << std::endl;
         pid_t child = waitpid(pid, &status, 0);
-        std::cout << "-- My child: " << child << " returned to me with status: " << status << std::endl;
+        //std::cout << "-- My child: " << child << " returned to me with status: " << status << std::endl;
       }
     }
   }
