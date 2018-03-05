@@ -14,7 +14,6 @@
 
 class MIShell {
   public:
-    MIShell();
     void run();
   private:
     Path path;

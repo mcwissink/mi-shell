@@ -13,10 +13,6 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-MIShell::MIShell() {
-  path = Path();
-}
-
 void handler(int sig) {
   int status;
   pid_t pid = waitpid(-1, &status, WNOHANG);
@@ -35,12 +31,13 @@ void MIShell::run() {
   while(1) {
     std::cout << Prompt().get() << "$ " << std::flush;
     CommandLine cl(std::cin);
-    std::string program = cl.getCommand();
+    std::string program("ls");
     int index = path.find(program);
     std::string directoryStr = path.getDirectory(index);
     std::cout << "program: " << program << ", index: " << index <<  directoryStr << std::endl;
     char *dir = strdup(directoryStr.c_str());
-    //char *env[] = { "HOME=/usr/home", "LOGNAME=home", NULL };
+    char *argv[] = {"ls", NULL};
+    char *env[] = { "HOME=/usr/home", "LOGNAME=home", NULL };
     std::cout<< "This is the directory: " << dir << std::endl;
     //signal(SIGCHLD, handler);
 
@@ -52,11 +49,14 @@ void MIShell::run() {
       std::cout << "-- Fork failed" << std::endl;
     } else if (pid == 0) {
       std::cout << "I am the child!" << std::endl;
-      execve(dir, cl.getArgVector(), NULL );
+      if (execve("/bin/ls", argv, NULL) == -1) {
+ 	perror("htaouht");
+      }
+      std::cout << "This should not happen" << std::endl;
     } else {
       if (cl.noAmpersand()) {
         std::cout << " -- waiting" << std::endl;
-        pid_t child = waitpid(0, &status, 0);
+        pid_t child = waitpid(pid, &status, 0);
         std::cout << "-- My child: " << child << " returned to me with status: " << status << std::endl;
       }
     }

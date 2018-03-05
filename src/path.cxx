@@ -38,10 +38,9 @@ int Path::find(const std::string& program) const {
   // Loop through all the directories in our path
   for (size_t i = 0; i < dirs.size(); i++) {
     // Open the directory
-    opendir(dirs[i].c_str());
-
+    dir = opendir(dirs[i].c_str());
     // Run until we close the directory
-    while (dp = readdir(dir)) {
+    while ((dp = readdir(dir))) {
         // Compare the name in the dirent structure to program
         if (dp->d_name == program) {
           closedir(dir);
