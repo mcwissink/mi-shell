@@ -6,6 +6,7 @@
  */
 
 #include "commandline.hxx"
+#include "util.hxx"
 #include <stdlib.h>
 #include <sstream>
 
@@ -17,6 +18,9 @@
 CommandLine::CommandLine(std::istream& in) {
   std::string command;
   std::getline(in, command);
+  argv = util::split(command, ' ');
+  argc = argv.size();
+  /*
   std::vector<char*> results;
   //https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
   //thanks to stack overflow for assistance splitting the command
@@ -32,8 +36,8 @@ CommandLine::CommandLine(std::istream& in) {
   results.push_back(strcpy(char_token, command.c_str()));
   results.push_back(NULL);
 
-  argc = results.size();
-  argv = results.data();
+  argc = res.size();
+  argv = res.data();*/
 }
 
 
@@ -42,7 +46,7 @@ CommandLine::CommandLine(std::istream& in) {
  * No parameters
  */
 char* CommandLine::getCommand() const {
-  return argv[0];
+  return getArgVector(0);
 }
 
 /* getArgCount() const
@@ -58,7 +62,12 @@ int CommandLine::getArgCount() const {
  * no parameters
  */
 char** CommandLine::getArgVector() const {
-  return argv;
+  std::vector<char*> c_argv;
+
+  for (size_t i = 0; i < argv.size(); i++)
+    c_argv.push_back(strdup(argv[i].c_str()));
+
+  return c_argv.data();
 }
 
 /* getArgVector(int i) const
@@ -66,7 +75,7 @@ char** CommandLine::getArgVector() const {
  * parameters: i, an integer
  */
 char* CommandLine::getArgVector(int i) const {
-  return argv[i];
+  return strdup(argv[i].c_str());
 }
 
 /* noAmpersand() const
@@ -74,10 +83,7 @@ char* CommandLine::getArgVector(int i) const {
  * no parameters
  */
 bool CommandLine::noAmpersand() const {
-  if (argv[argc-1][0] == '&') {
-    return false;
-  }
-  return true;
+  return (argv[argc-1] != "&");
 }
 /*
 CommandLine::~CommandLine() {

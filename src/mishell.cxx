@@ -13,12 +13,10 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-void handler(int sig) {
+static void child_handler(int sig){
   int status;
   pid_t pid = waitpid(-1, &status, WNOHANG);
-  if (pid > 0){
-    std::cout << "-- My background child: " << pid << " returned to me with status: " << status << std::endl;
-  }
+  std::cout << "background child: " <<pid << std::endl;
 }
 
 /**
@@ -27,32 +25,35 @@ void handler(int sig) {
  * @return void.
  */
 void MIShell::run() {
-  std::string command;
-  while(1) {
+  // Setup signal handler
+  struct sigaction handler;
+  handler.sa_handler = child_handler;
+  sigaction(SIGCHLD, &handler, NULL);
+
+  {
     std::cout << Prompt().get() << "$ " << std::flush;
     CommandLine cl(std::cin);
-    std::string program("ls");
+    std::string program = cl.getCommand();
     int index = path.find(program);
     std::string directoryStr = path.getDirectory(index);
     std::cout << "program: " << program << ", index: " << index <<  directoryStr << std::endl;
-    char *dir = strdup(directoryStr.c_str());
+    char *dir = strdup(std::string(directoryStr + '/' + program).c_str());
+    std::cout << dir << std::endl;
     char *argv[] = {"ls", NULL};
-    char *env[] = { "HOME=/usr/home", "LOGNAME=home", NULL };
+
     std::cout<< "This is the directory: " << dir << std::endl;
-    //signal(SIGCHLD, handler);
+
+
 
     pid_t pid = fork();
     std::cout<< "We forked the children" << std::endl;
     int status;
 
     if (pid < 0) {
-      std::cout << "-- Fork failed" << std::endl;
+      std::cout << "Fork failed" << std::endl;
     } else if (pid == 0) {
       std::cout << "I am the child!" << std::endl;
-      if (execve("/bin/ls", argv, NULL) == -1) {
- 	perror("htaouht");
-      }
-      std::cout << "This should not happen" << std::endl;
+      execve(dir, argv, NULL);
     } else {
       if (cl.noAmpersand()) {
         std::cout << " -- waiting" << std::endl;

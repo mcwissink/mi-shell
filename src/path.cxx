@@ -6,6 +6,7 @@
  */
 
 #include "path.hxx"
+#include "util.hxx"
 #include <sys/types.h>
 #include <errno.h>
 #include <string.h>
@@ -18,12 +19,7 @@
  * Constructor builds a vector of all directories in the PATH
  */
 Path::Path() {
-  // Get the PATH environment variable
-  char *path = getenv("PATH");
-  char *token;
-  // Tokenize the string and store it in dirs
-  while ((token = strtok_r(path, ":", &path)))
-    dirs.push_back(token);
+  dirs = util::split(getenv("PATH"), ':');
 }
 
 /**
