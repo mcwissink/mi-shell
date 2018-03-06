@@ -51,3 +51,7 @@ int Path::find(const std::string& program) const {
 std::string Path::getDirectory(int i) const {
   return dirs[i];
 };
+
+std::string Path::getPath(const std::string& program) const {
+  return getDirectory(find(program)) + '/' + program;
+}

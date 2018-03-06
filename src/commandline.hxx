@@ -18,7 +18,7 @@ class CommandLine {
     CommandLine(std::istream& in);
     char* getCommand() const;
     int getArgCount() const;
-    char** getArgVector() const;
+    std::vector<char*> getArgVector() const;
     char* getArgVector(int i) const;
     bool noAmpersand() const;
   private:

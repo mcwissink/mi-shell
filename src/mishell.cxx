@@ -34,9 +34,7 @@ void MIShell::run() {
     std::cout << Prompt().get() << "$ " << std::flush;
     CommandLine cl(std::cin);
 
-    char* dir = strdup(std::string(path.getDirectory(path.find(cl.getCommand())) + '/' + cl.getCommand()).c_str());
-    char** argv = cl.getArgVector();
-
+    //char* dir = strdup(std::string(path.getDirectory(path.find(cl.getCommand())) + '/' + cl.getCommand()).c_str());
     pid_t pid = fork();
     int status;
 
@@ -44,11 +42,12 @@ void MIShell::run() {
       //std::cout << "Fork failed" << std::endl;
     } else if (pid == 0) {
       //std::cout << "I am the child!" << std::endl;
-      execve(dir, argv, NULL);
+      execve(path.getPath(cl.getCommand()).c_str(), cl.getArgVector().data(), NULL);
     } else {
       if (cl.noAmpersand()) {
         //std::cout << " -- waiting" << std::endl;
-        pid_t child = waitpid(pid, &status, 0);
+        //pid_t child =
+        waitpid(pid, &status, 0);
         //std::cout << "-- My child: " << child << " returned to me with status: " << status << std::endl;
       }
     }
