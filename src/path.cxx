@@ -34,17 +34,22 @@ int Path::find(const std::string& program) const {
   // Loop through all the directories in our path
   for (size_t i = 0; i < dirs.size(); i++) {
     // Open the directory
-    dir = opendir(dirs[i].c_str());
+    util::syserr((dir = opendir(dirs[i].c_str())) == NULL);
     // Run until we close the directory
     while ((dp = readdir(dir))) {
-        // Compare the name in the dirent structure to program
-        if (dp->d_name == program) {
-          closedir(dir);
-          return i;
-        }
+      // Compare the name in the dirent structure to program
+      if (dp->d_name == program) {
+        util::syserr(closedir(dir));
+        // Return the index of the current directory
+        return i;
+      }
     }
-    closedir(dir);
+    // Check for an error from readdir
+    util::syserr((errno == 0));
+    // Close the dir
+    util::syserr(closedir(dir));
   }
+  // Return -1 since we didn't find any
   return -1;
 };
 

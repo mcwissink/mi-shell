@@ -64,11 +64,12 @@ int CommandLine::getArgCount() const {
  */
 std::vector<char*> CommandLine::getArgVector() const {
   std::vector<char*> c_argv;
-  
+
   for (size_t i = 0; i < argv.size(); i++) {
     if (argv[i] != "&")
       c_argv.push_back(strdup(argv[i].c_str()));
   }
+
   c_argv.push_back(NULL);
   return c_argv;
 }

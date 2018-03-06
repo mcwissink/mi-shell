@@ -26,4 +26,13 @@ namespace util {
 
     return elems;
   }
+
+  /**
+   * Print errors messages
+   * @param a boolean, whether the funciton
+   * @return an array of the string seperate by the delimiter
+   */
+  void syserr(bool err) {
+    if (err) std::cerr << "Error:" << strerror(errno) << std::endl;
+  }
 }
