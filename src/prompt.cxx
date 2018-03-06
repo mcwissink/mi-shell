@@ -23,5 +23,5 @@ Prompt::Prompt() {
 }
 
 std::string Prompt::get() const {
-  return cwd;
+  return cwd + "$ ";
 };

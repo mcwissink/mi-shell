@@ -9,6 +9,7 @@
 #include "util.hxx"
 #include <stdlib.h>
 #include <sstream>
+#include <algorithm>
 
 /* CommandLine constructor
  * Params: istream& in
@@ -65,7 +66,8 @@ std::vector<char*> CommandLine::getArgVector() const {
   std::vector<char*> c_argv;
   
   for (size_t i = 0; i < argv.size(); i++) {
-    c_argv.push_back(strdup(argv[i].c_str()));
+    if (argv[i] != "&")
+      c_argv.push_back(strdup(argv[i].c_str()));
   }
   c_argv.push_back(NULL);
   return c_argv;
@@ -84,7 +86,7 @@ char* CommandLine::getArgVector(int i) const {
  * no parameters
  */
 bool CommandLine::noAmpersand() const {
-  return (argv[argc-1] != "&");
+  return std::find(argv.begin(), argv.end(), "&") == argv.end();
 }
 /*
 CommandLine::~CommandLine() {

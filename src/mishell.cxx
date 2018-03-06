@@ -13,28 +13,27 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-static void child_handler(int sig){
-  int status;
-  pid_t pid = waitpid(-1, &status, WNOHANG);
-  std::cout << "background child: " <<pid << std::endl;
-}
-
 /**
  * Runs and contains logic for the shell
  * @param none.
  * @return void.
  */
 void MIShell::run() {
-  // Setup signal handler
-  struct sigaction handler;
-  handler.sa_handler = child_handler;
-  sigaction(SIGCHLD, &handler, NULL);
+  /** Register signal handler
+   * https://linux.die.net/man/2/sigaction
+   * http://www.microhowto.info/howto/reap_zombie_processes_using_a_sigchld_handler.html
+   */
+  struct sigaction sa;
+  sa.sa_handler = SIG_IGN;
+  sigemptyset(&sa.sa_mask);
+  sa.sa_flags = SA_RESTART | SA_NOCLDSTOP;
+  sigaction(SIGCHLD, &sa, 0);
 
-  {
-    std::cout << Prompt().get() << "$ " << std::flush;
+  // Run the shell
+  while(true){
+    std::cout << Prompt().get() << std::flush;
     CommandLine cl(std::cin);
-
-    //char* dir = strdup(std::string(path.getDirectory(path.find(cl.getCommand())) + '/' + cl.getCommand()).c_str());
+ 
     pid_t pid = fork();
     int status;
 
