@@ -22,6 +22,10 @@ Prompt::Prompt() {
     cwd = getcwd(buf, (size_t)size);
 }
 
+std::string Prompt::getCwd() const {
+  return cwd;
+}
+
 std::string Prompt::get() const {
   return cwd + "$ ";
 };

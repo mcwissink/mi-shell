@@ -15,6 +15,8 @@ class Prompt {
   public:
     Prompt();
     std::string get() const;
+    std::string getCwd() const;
+    void setCwd();
   private:
     std::string cwd;
 };
