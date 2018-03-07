@@ -21,41 +21,6 @@ CommandLine::CommandLine(std::istream& in) {
   std::getline(in, command);
   argv = util::split(command, ' ');
   argc = argv.size();
-  /*
-  std::vector<char*> results;
-  //https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
-  //thanks to stack overflow for assistance splitting the command
-  size_t pos = 0;
-  std::string token;
-  while ((pos = command.find(" ")) != std::string::npos) {
-    token = command.substr(0, pos);
-    char* char_token = (char*) calloc(token.length()+1, 1);
-    results.push_back(strcpy(char_token, token.c_str()));
-    command.erase(0, pos + 1);
-  }
-  char* char_token = (char*) calloc(command.length()+1, 1);
-  results.push_back(strcpy(char_token, command.c_str()));
-  results.push_back(NULL);
-
-  argc = res.size();
-  argv = res.data();*/
-}
-
-
-/* getCommand() const
- * returns the address in the first entry of argv (char*)
- * No parameters
- */
-char* CommandLine::getCommand() const {
-  return getArgVector(0);
-}
-
-/* getArgCount() const
- * returns argc (int)
- * no parameters
- */
-int CommandLine::getArgCount() const {
-  return argc;
 }
 
 /* getArgVector() const
@@ -74,14 +39,6 @@ std::vector<char*> CommandLine::getArgVector() const {
   return c_argv;
 }
 
-/* getArgVector(int i) const
- * returns the address at the ith entry in argv
- * parameters: i, an integer
- */
-char* CommandLine::getArgVector(int i) const {
-  return strdup(argv[i].c_str());
-}
-
 /* noAmpersand() const
  * returns a bool: true if the last entry of argv is an ampersand, else false
  * no parameters
@@ -89,10 +46,3 @@ char* CommandLine::getArgVector(int i) const {
 bool CommandLine::noAmpersand() const {
   return std::find(argv.begin(), argv.end(), "&") == argv.end();
 }
-/*
-CommandLine::~CommandLine() {
-  for(int i=0; argv[i] != NULL; i++) {
-    free(argv[i]);
-  }
-  free(argv);
-}*/

@@ -16,8 +16,7 @@ class Path {
   public:
     Path();
     int find(const std::string& program) const;
-    std::string getDirectory(int i) const;
-    std::string getPath(const std::string& program) const;
+    std::string getDirectory(int i) const { return dirs[i]; };
   private:
     std::vector<std::string> dirs;
 };

@@ -7,6 +7,9 @@
 
 #include "mishell.hxx"
 #include "commandline.hxx"
+#include "path.hxx"
+#include "prompt.hxx"
+#include "util.hxx"
 #include <iostream>
 #include <unistd.h>
 #include <stdio.h>
@@ -19,46 +22,54 @@
  * @return void.
  */
 void MIShell::run() {
-  /** Register signal handler
+  /** Register signal handler so no zombies are created
    * https://linux.die.net/man/2/sigaction
    * http://www.microhowto.info/howto/reap_zombie_processes_using_a_sigchld_handler.html
    */
-   /*
-  struct sigaction sa;
-  sa.sa_handler = SIG_IGN;
-  sigemptyset(&sa.sa_mask);
-  sa.sa_flags = SA_RESTART | SA_NOCLDSTOP;
-  sigaction(SIGCHLD, &sa, 0);
-  */
   signal(SIGCHLD, SIG_IGN);
 
-  // Run the shell
-  while(true){
-    std::cout << Prompt().get() << std::flush;
+  while(true) {
+    // Initalize a path and prompt - this is probably not very efficient
+    Prompt prompt;
+    Path path;
+    std::cout << prompt.get() << "$ " << std::flush;
+
+    // Initialize the command line
     CommandLine cl(std::cin);
+    std::string command = cl.getCommand();
 
-    if((std::string)cl.getCommand() == "cd") {
-      chdir((Prompt().getCwd() + "/" + (std::string)cl.getArgVector(1)).c_str());
-    } else if((std::string)cl.getCommand() == "exit") {
+    if (command == "") {
+      // Do nothing
+    } else if (command == "exit") { // Exit the shell
       break;
-    } else if((std::string)cl.getCommand() == "pwd") {
-      std::cout << Prompt().getCwd() << "\n" << std::flush;
-    } else {
-      pid_t pid = fork();
-      int status;
-
-      if (pid < 0) {
-        //std::cout << "Fork failed" << std::endl;
-      } else if (pid == 0) {
-        //std::cout << "I am the child!" << std::endl;
-        execve(path.getPath(cl.getCommand()).c_str(), cl.getArgVector().data(), NULL);
+    } else if (command == "cd") { // Change directory
+      std::string dir = cl.getArgVector(1);
+      if (dir == ".." || dir == ".") {
+        chdir((prompt.get() + "/" + dir).c_str());
       } else {
-        if (cl.noAmpersand()) {
-          //std::cout << " -- waiting" << std::endl;
-          //pid_t child =
-          waitpid(pid, &status, 0);
-          //std::cout << "-- My child: " << child << " returned to me with status: " << status << std::endl;
+        chdir(dir.c_str());
+      }
+    } else if (command == "pwd") { // Print the working directory
+      std::cout << prompt.get() << "\n" << std::flush;
+    } else { // Run a command
+      int prog_i = path.find(command);
+      if (prog_i != -1) { // If we found a program
+        // Do the forking we learned in class
+        pid_t pid = fork();
+        if (pid < 0) {
+          std::cerr << "Fork failed" << std::endl;
+        } else if (pid == 0) {
+          // Execute the command
+          execve((path.getDirectory(prog_i) + '/' + command).c_str(), cl.getArgVector().data(), NULL);
+        } else {
+          // If there is an ampersand, the signal handler should clean it up
+          if (cl.noAmpersand()) {
+            // Reap the child
+            waitpid(pid, NULL, 0);
+          }
         }
+      } else { // No program found
+        std::cout << command << ": command not found" << std::endl;
       }
     }
   }

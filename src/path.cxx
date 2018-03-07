@@ -34,29 +34,20 @@ int Path::find(const std::string& program) const {
   // Loop through all the directories in our path
   for (size_t i = 0; i < dirs.size(); i++) {
     // Open the directory
-    util::syserr((dir = opendir(dirs[i].c_str())) == NULL);
+    dir = opendir(dirs[i].c_str());
     // Run until we close the directory
     while ((dp = readdir(dir))) {
       // Compare the name in the dirent structure to program
       if (dp->d_name == program) {
-        util::syserr(closedir(dir));
+        closedir(dir);
         // Return the index of the current directory
         return i;
       }
     }
     // Check for an error from readdir
-    util::syserr((errno == 0));
     // Close the dir
-    util::syserr(closedir(dir));
+    closedir(dir);
   }
   // Return -1 since we didn't find any
   return -1;
 };
-
-std::string Path::getDirectory(int i) const {
-  return dirs[i];
-};
-
-std::string Path::getPath(const std::string& program) const {
-  return getDirectory(find(program)) + '/' + program;
-}

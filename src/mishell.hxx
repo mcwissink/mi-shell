@@ -9,12 +9,7 @@
 
 #pragma once
 
-#include "path.hxx"
-#include "prompt.hxx"
-
 class MIShell {
   public:
     void run();
-  private:
-    Path path;
 };

@@ -16,10 +16,10 @@
 class CommandLine {
  public:
     CommandLine(std::istream& in);
-    char* getCommand() const;
-    int getArgCount() const;
+    std::string getCommand() const { return argc ? argv[0] : ""; };
+    int getArgCount() const { return argc; };
     std::vector<char*> getArgVector() const;
-    char* getArgVector(int i) const;
+    const std::string& getArgVector(int i) const { return argv[i]; };
     bool noAmpersand() const;
   private:
     int argc;
