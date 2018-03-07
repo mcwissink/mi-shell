@@ -42,7 +42,7 @@ void MIShell::run() {
       case C_NONE: break; // Do nothing
       case C_EXIT: exit(0); break; // Exit the shell
       case  C_PWD: std::cout << prompt.get() << std::endl; break; // Print cwd
-      case   C_CD: changeDirectory(prompt, cl.getArgVector(1)); break; // Change directory
+      case   C_CD: changeDirectory(cl.getArgVector(1)); break; // Change directory
       case C_PROG: runProgram(cl, command); break; // Run a program
     }
   }
@@ -75,12 +75,8 @@ void MIShell::runProgram(const CommandLine& cl, const std::string& command) {
  * Changes directory
  * @param commandline and prompt references
  */
-void MIShell::changeDirectory(const Prompt& prompt, const std::string& dir) {
-  if (dir == ".." || dir == ".") {
-    util::syserr(chdir((prompt.get() + "/" + dir).c_str()) == -1);
-  } else {
-    util::syserr(chdir(dir.c_str()) == -1);
-  }
+void MIShell::changeDirectory(const std::string& dir) {
+  util::syserr(chdir(dir.c_str()) == -1);
 };
 
 /**
