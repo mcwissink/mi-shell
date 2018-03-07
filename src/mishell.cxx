@@ -22,6 +22,7 @@ extern "C" {
  * @return void.
  */
 void MIShell::run() {
+  prevDir = "\0";
   while(true) {
     // Initalize a path and prompt - not efficient, but easy
     Prompt prompt;
@@ -38,12 +39,14 @@ void MIShell::run() {
     std::string command = cl.getCommand();
 
     // Parse the command
-    switch (parseCommand(command)) {
-      case C_NONE: break; // Do nothing
-      case C_EXIT: exit(0); break; // Exit the shell
-      case  C_PWD: std::cout << prompt.get() << std::endl; break; // Print cwd
-      case   C_CD: changeDirectory(cl.getArgVector(1)); break; // Change directory
-      case C_PROG: runProgram(cl, command); break; // Run a program
+    if (command == "exit"){
+      exit(0); // Exit the shell
+    } else if (command == "pwd"){
+      std::cout << prompt.get() << std::endl; // Print cwd
+    } else if (command == "cd") {
+      changeDirectory(cl.getArgVector(1), prompt); // Change directory
+    } else {
+      runProgram(cl, command); // Run a program
     }
   }
 }
@@ -75,19 +78,18 @@ void MIShell::runProgram(const CommandLine& cl, const std::string& command) {
  * Changes directory
  * @param commandline and prompt references
  */
-void MIShell::changeDirectory(const std::string& dir) {
-  util::syserr(chdir(dir.c_str()) == -1);
+void MIShell::changeDirectory(const std::string& dir, const Prompt prompt) {
+  if (dir == "" || dir == "~") {
+    prevDir = prompt.get();
+    util::syserr(chdir(getenv("HOME")) == -1);
+  } else if (dir == "-") {
+    if(prevDir != "\0") {
+      util::syserr(chdir(prevDir.c_str()) == -1);
+    } else {
+      std::cerr << "-bash: cd: OLDPWD not set" << std::endl;
+    }
+  } else {
+    prevDir = prompt.get();
+    util::syserr(chdir(dir.c_str()) == -1);
+  }
 };
-
-/**
- * Allows use of switch on strings
- * @param a command
- * @return Command enum for a switch
- */
-MIShell::Command MIShell::parseCommand(const std::string& command) {
-  if (command == "exit") return C_EXIT;
-  else if (command == "cd") return C_CD;
-  else if (command == "pwd") return C_PWD;
-  else if (command == "") return C_NONE;
-  else return C_PROG;
-}
