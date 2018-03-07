@@ -6,6 +6,7 @@
  */
 
 #include "prompt.hxx"
+#include "util.hxx"
 extern "C" {
   #include <stdlib.h>
   #include <unistd.h>
@@ -13,10 +14,12 @@ extern "C" {
 
 /**
  * Get the current working directory
+ * http://pubs.opengroup.org/onlinepubs/009695399/functions/getcwd.html
  */
 Prompt::Prompt() {
   char *buf;  // Pointer to the buffer for storing path name
-  long size = pathconf(".", _PC_PATH_MAX); // Make sure we can handle any path size
+  long size;
+  util::syserr((size = pathconf(".", _PC_PATH_MAX)) == -1);
 
   // Set the buffer pointer to memory for storing the path
   if ((buf = (char*)malloc((size_t)size)) != NULL)
