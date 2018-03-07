@@ -9,7 +9,14 @@
 
 #pragma once
 
+#include "commandline.hxx"
+#include "path.hxx"
+#include "prompt.hxx"
+
 class MIShell {
   public:
     void run();
+    void changeDirectory(const CommandLine& cl, const Prompt& prompt);
+    enum Command { C_PWD, C_CD, C_EXIT, C_NONE, C_PROG };
+    Command parseCommand(const std::string& command);
 };
