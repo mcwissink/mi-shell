@@ -22,7 +22,7 @@ extern "C" {
  * @return void.
  */
 void MIShell::run() {
-  prevDir = "\0";
+  prevDir = "\0"; //initialize previous directory to null
   while(true) {
     // Initalize a path and prompt - not efficient, but easy
     Prompt prompt;
@@ -51,6 +51,10 @@ void MIShell::run() {
   }
 }
 
+/* Executes all non-shell commands
+ * @param CommandLine, command
+ * @return void
+ */
 void MIShell::runProgram(const CommandLine& cl, const std::string& command) {
   int i = path.find(command);
   if (i != -1) { // If we found a program
@@ -79,16 +83,16 @@ void MIShell::runProgram(const CommandLine& cl, const std::string& command) {
  * @param commandline and prompt references
  */
 void MIShell::changeDirectory(const std::string& dir, const Prompt prompt) {
-  if (dir == "" || dir == "~") {
+  if (dir == "" || dir == "~") { //go to home directory
     prevDir = prompt.get();
     util::syserr(chdir(getenv("HOME")) == -1);
-  } else if (dir == "-") {
+  } else if (dir == "-") { //go to previous directory
     if(prevDir != "\0") {
       util::syserr(chdir(prevDir.c_str()) == -1);
     } else {
       std::cerr << "-bash: cd: OLDPWD not set" << std::endl;
     }
-  } else {
+  } else { //go to whatever directory is specified
     prevDir = prompt.get();
     util::syserr(chdir(dir.c_str()) == -1);
   }

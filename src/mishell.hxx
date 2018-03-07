@@ -1,7 +1,7 @@
 /**
  * CS-232
  * mishell.hxx
- * @author Mark Wissink
+ * @author Mark Wissink and Ian Adams
  * @version 03/03/18
  * MIShell
  * Integrates CommandLine, Path, and Prompt to create a shell environment.
@@ -22,5 +22,5 @@ class MIShell {
     void runProgram(const CommandLine& cl, const std::string& command);
   private:
     Path path;
-    std::string prevDir;
+    std::string prevDir; //previous directory
 };
