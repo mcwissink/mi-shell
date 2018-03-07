@@ -7,13 +7,15 @@
 
 #include "path.hxx"
 #include "util.hxx"
-#include <sys/types.h>
-#include <errno.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <dirent.h>
 #include <iostream>
+extern "C" {
+  #include <errno.h>
+  #include <string.h>
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <dirent.h>
+  #include <sys/types.h>
+}
 
 /**
  * Constructor builds a vector of all directories in the PATH

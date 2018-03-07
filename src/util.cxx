@@ -7,6 +7,11 @@
 
 #include "util.hxx"
 #include <sstream>
+#include <iostream>
+#include <cstring>
+extern "C" {
+  #include <errno.h>
+}
 
 namespace util {
 

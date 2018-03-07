@@ -7,9 +7,11 @@
 
 #include "commandline.hxx"
 #include "util.hxx"
-#include <stdlib.h>
 #include <sstream>
 #include <algorithm>
+extern "C" {
+  #include <stdlib.h>
+}
 
 /* CommandLine constructor
  * Params: istream& in

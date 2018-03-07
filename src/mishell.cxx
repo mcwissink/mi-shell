@@ -8,11 +8,13 @@
 #include "mishell.hxx"
 #include "util.hxx"
 #include <iostream>
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/wait.h>
+extern "C" {
+  #include <unistd.h>
+  #include <stdlib.h>
+  #include <stdio.h>
+  #include <sys/types.h>
+  #include <sys/wait.h>
+}
 
 /**
  * Runs and contains logic for the shell
@@ -39,8 +41,8 @@ void MIShell::run() {
     switch (parseCommand(command)) {
       case C_NONE: break; // Do nothing
       case C_EXIT: exit(0); break; // Exit the shell
-      case   C_CD: changeDirectory(cl, prompt); break; // Change directory
       case  C_PWD: std::cout << prompt.get() << std::endl; break; // Print cwd
+      case   C_CD: changeDirectory(cl, prompt); break; // Change directory
       case C_PROG: { // Run a program
         int programPath = path.find(command);
         if (programPath != -1) { // If we found a program
@@ -59,7 +61,7 @@ void MIShell::run() {
             }
           }
         } else { // No program found
-          std::cout << command << ": command not found" << std::endl;
+          std::cout << "Error: "<< command << ": command not found" << std::endl;
         }
         break;
       }
