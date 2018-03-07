@@ -26,14 +26,14 @@ void MIShell::run() {
    * https://linux.die.net/man/2/sigaction
    * http://www.microhowto.info/howto/reap_zombie_processes_using_a_sigchld_handler.html
    */
-  signal(SIGCHLD, SIG_IGN);
 
   while(true) {
+    //    waitpid(-1, NULL, WNOHANG);
     // Initalize a path and prompt - this is probably not very efficient
     Prompt prompt;
     Path path;
     std::cout << prompt.get() << "$ " << std::flush;
-
+    waitpid(-1, NULL, WNOHANG);
     // Initialize the command line
     CommandLine cl(std::cin);
     std::string command = cl.getCommand();
@@ -48,19 +48,19 @@ void MIShell::run() {
         if (i != -1) { // If we found a program
           // Do the forking we learned in class
           pid_t pid = fork();
-          if (pid < 0) {
+          if (pid < 0) { // I failed
             std::cerr << "Fork failed" << std::endl;
-          } else if (pid == 0) {
+          } else if (pid == 0) { // I am the child
             // Execute the command
             std::vector<char*> argv;
             cl.getArgVector(argv);
             util::syserr(execve(path.buildPath(path.getDirectory(i), command).c_str(),
                          argv.data(), NULL) == -1);
-          } else {
+          } else { // I am the parent
             // If there is an ampersand, the signal handler should clean it up
             if (cl.noAmpersand()) {
               // Reap the child
-              waitpid(pid, NULL, 0);
+              util::syserr(waitpid(pid, NULL, 0) == -1);
             }
           }
         } else { // No program found
