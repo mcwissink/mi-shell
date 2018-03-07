@@ -36,7 +36,7 @@ int Path::find(const std::string& program) const {
   // Loop through all the directories in our path
   for (size_t i = 0; i < dirs.size(); i++) {
     // Open the directory
-    dir = opendir(dirs[i].c_str());
+    util::syserr((dir = opendir(dirs[i].c_str())) == NULL);
     // Run until we close the directory
     while ((dp = readdir(dir))) {
       // Compare the name in the dirent structure to program
@@ -46,9 +46,8 @@ int Path::find(const std::string& program) const {
         return i;
       }
     }
-    // Check for an error from readdir
     // Close the dir
-    closedir(dir);
+    util::syserr(closedir(dir) == -1);
   }
   // Return -1 since we didn't find any
   return -1;

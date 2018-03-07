@@ -22,21 +22,22 @@ extern "C" {
  * @return void.
  */
 void MIShell::run() {
-  /** Register signal handler so no zombies are created
-   * https://linux.die.net/man/2/sigaction
-   * http://www.microhowto.info/howto/reap_zombie_processes_using_a_sigchld_handler.html
-   */
-
   while(true) {
-    //    waitpid(-1, NULL, WNOHANG);
-    // Initalize a path and prompt - this is probably not very efficient
+    // Initalize a path and prompt - not efficient, but easy
     Prompt prompt;
     Path path;
     std::cout << prompt.get() << "$ " << std::flush;
-    waitpid(-1, NULL, WNOHANG);
-    // Initialize the command line
+
+    /** wait on any background processes that could have terminated
+     *  WNOHANG means that waitpid won't block
+     * while loop ensure if multiple process terminated, they all get waited
+     */
+    while (waitpid(-1, NULL, WNOHANG) > 0);
+
+    // Initialize the command line and get the command
     CommandLine cl(std::cin);
     std::string command = cl.getCommand();
+
     // Parse the command
     switch (parseCommand(command)) {
       case C_NONE: break; // Do nothing
@@ -46,20 +47,18 @@ void MIShell::run() {
       case C_PROG: { // Run a program
         int i = path.find(command);
         if (i != -1) { // If we found a program
+          pid_t pid;
           // Do the forking we learned in class
-          pid_t pid = fork();
-          if (pid < 0) { // I failed
-            std::cerr << "Fork failed" << std::endl;
-          } else if (pid == 0) { // I am the child
-            // Execute the command
+          util::syserr((pid = fork()) == -1);
+          if (pid == 0) { // I am the child
+            // Get the arg vector
             std::vector<char*> argv;
             cl.getArgVector(argv);
+            // Execute the command
             util::syserr(execve(path.buildPath(path.getDirectory(i), command).c_str(),
                          argv.data(), NULL) == -1);
           } else { // I am the parent
-            // If there is an ampersand, the signal handler should clean it up
             if (cl.noAmpersand()) {
-              // Reap the child
               util::syserr(waitpid(pid, NULL, 0) == -1);
             }
           }
@@ -72,15 +71,24 @@ void MIShell::run() {
   }
 }
 
+/**
+ * Changes directory
+ * @param commandline and prompt references
+ */
 void MIShell::changeDirectory(const CommandLine& cl, const Prompt& prompt) {
   std::string dir = cl.getArgVector(1);
   if (dir == ".." || dir == ".") {
-    util::syserr(chdir((prompt.get() + "/" + dir).c_str()));
+    util::syserr(chdir((prompt.get() + "/" + dir).c_str()) == -1);
   } else {
-    chdir(dir.c_str());
+    util::syserr(chdir(dir.c_str()) == -1);
   }
 };
 
+/**
+ * Allows use of switch on strings
+ * @param a command
+ * @return Command enum for a switch
+ */
 MIShell::Command MIShell::parseCommand(const std::string& command) {
   if (command == "exit") return C_EXIT;
   else if (command == "cd") return C_CD;
