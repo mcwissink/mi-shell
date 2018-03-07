@@ -1,3 +1,11 @@
+/**
+ * CS-232
+ * shelltests.cxx
+ * @author Ian Adams
+ * @version 03/04/18
+ * Mark declined to use this for class testing
+ */
+
 #include "shelltests.hxx"
 using namespace std;
 
@@ -32,5 +40,5 @@ void ShellTests::testCommandLine() {
   assert(cl.getArgVector(2)[0] == '&');
   assert(!cl.noAmpersand());
   cout << "passed..." << endl;
-  //note: all tests were passed 
+  //note: all tests were passed
 }

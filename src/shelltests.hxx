@@ -1,3 +1,9 @@
+/**
+ * CS-232
+ * commandline.hxx
+ * @author Ian Adams
+ * @version 03/04/18
+ */
 #pragma once
 
 #include "commandline.hxx"

@@ -24,8 +24,6 @@ extern "C" {
 void MIShell::run() {
   while(true) {
     // Initalize a path and prompt - not efficient, but easy
-    Prompt prompt;
-    Path path;
     std::cout << prompt.get() << "$ " << std::flush;
 
     /** wait on any background processes that could have terminated
@@ -43,39 +41,44 @@ void MIShell::run() {
       case C_NONE: break; // Do nothing
       case C_EXIT: exit(0); break; // Exit the shell
       case  C_PWD: std::cout << prompt.get() << std::endl; break; // Print cwd
-      case   C_CD: changeDirectory(cl, prompt); break; // Change directory
+      case   C_CD: changeDirectory(cl); break; // Change directory
       case C_PROG: { // Run a program
-        int i = path.find(command);
-        if (i != -1) { // If we found a program
-          pid_t pid;
-          // Do the forking we learned in class
-          util::syserr((pid = fork()) == -1);
-          if (pid == 0) { // I am the child
-            // Get the arg vector
-            std::vector<char*> argv;
-            cl.getArgVector(argv);
-            // Execute the command
-            util::syserr(execve(path.buildPath(path.getDirectory(i), command).c_str(),
-                         argv.data(), NULL) == -1);
-          } else { // I am the parent
-            if (cl.noAmpersand()) {
-              util::syserr(waitpid(pid, NULL, 0) == -1);
-            }
-          }
-        } else { // No program found
-          std::cout << "Error: "<< command << ": command not found" << std::endl;
-        }
+        runProgram(cl, command);
         break;
       }
     }
   }
 }
 
+void MIShell::runProgram(const CommandLine cl, const std::string command) {
+  int i = path.find(command);
+  if (i != -1) { // If we found a program
+    pid_t pid;
+    // Do the forking we learned in class
+    util::syserr((pid = fork()) == -1);
+    if (pid == 0) { // I am the child
+      // Get the arg vector
+      std::vector<char*> argv;
+      cl.getArgVector(argv);
+      // Execute the command
+      util::syserr(execve(path.buildPath(path.getDirectory(i), command).c_str(),
+                   argv.data(), NULL) == -1);
+    } else { // I am the parent
+      if (cl.noAmpersand()) {
+        util::syserr(waitpid(pid, NULL, 0) == -1);
+      }
+    }
+  } else { // No program found
+    std::cout << "Error: "<< command << ": command not found" << std::endl;
+  }
+}
+
+
 /**
  * Changes directory
  * @param commandline and prompt references
  */
-void MIShell::changeDirectory(const CommandLine& cl, const Prompt& prompt) {
+void MIShell::changeDirectory(const CommandLine& cl) {
   std::string dir = cl.getArgVector(1);
   if (dir == ".." || dir == ".") {
     util::syserr(chdir((prompt.get() + "/" + dir).c_str()) == -1);

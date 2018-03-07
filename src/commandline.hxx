@@ -1,7 +1,7 @@
 /**
  * CS-232
  * commandline.hxx
- * @author Mark Wissink
+ * @author Ian Adams
  * @version 03/03/18
  * CommandLine
  * Handles command and arguements input
