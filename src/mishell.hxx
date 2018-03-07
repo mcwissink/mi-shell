@@ -16,11 +16,10 @@
 class MIShell {
   public:
     void run();
-    void changeDirectory(const CommandLine& cl);
+    void changeDirectory(const Prompt& prompt, const std::string& dir);
     enum Command { C_PWD, C_CD, C_EXIT, C_NONE, C_PROG };
     Command parseCommand(const std::string& command);
-    void runProgram(const CommandLine cl, const std::string command);
+    void runProgram(const CommandLine& cl, const std::string& command);
   private:
-    Prompt prompt;
     Path path;
 };

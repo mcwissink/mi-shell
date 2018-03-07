@@ -24,6 +24,7 @@ extern "C" {
 void MIShell::run() {
   while(true) {
     // Initalize a path and prompt - not efficient, but easy
+    Prompt prompt;
     std::cout << prompt.get() << "$ " << std::flush;
 
     /** wait on any background processes that could have terminated
@@ -41,16 +42,13 @@ void MIShell::run() {
       case C_NONE: break; // Do nothing
       case C_EXIT: exit(0); break; // Exit the shell
       case  C_PWD: std::cout << prompt.get() << std::endl; break; // Print cwd
-      case   C_CD: changeDirectory(cl); break; // Change directory
-      case C_PROG: { // Run a program
-        runProgram(cl, command);
-        break;
-      }
+      case   C_CD: changeDirectory(prompt, cl.getArgVector(1)); break; // Change directory
+      case C_PROG: runProgram(cl, command); break; // Run a program
     }
   }
 }
 
-void MIShell::runProgram(const CommandLine cl, const std::string command) {
+void MIShell::runProgram(const CommandLine& cl, const std::string& command) {
   int i = path.find(command);
   if (i != -1) { // If we found a program
     pid_t pid;
@@ -61,8 +59,7 @@ void MIShell::runProgram(const CommandLine cl, const std::string command) {
       std::vector<char*> argv;
       cl.getArgVector(argv);
       // Execute the command
-      util::syserr(execve(path.buildPath(path.getDirectory(i), command).c_str(),
-                   argv.data(), NULL) == -1);
+      util::syserr(execve(path.buildPath(path.getDirectory(i), command).c_str(), argv.data(), NULL) == -1);
     } else { // I am the parent
       if (cl.noAmpersand()) {
         util::syserr(waitpid(pid, NULL, 0) == -1);
@@ -78,8 +75,7 @@ void MIShell::runProgram(const CommandLine cl, const std::string command) {
  * Changes directory
  * @param commandline and prompt references
  */
-void MIShell::changeDirectory(const CommandLine& cl) {
-  std::string dir = cl.getArgVector(1);
+void MIShell::changeDirectory(const Prompt& prompt, const std::string& dir) {
   if (dir == ".." || dir == ".") {
     util::syserr(chdir((prompt.get() + "/" + dir).c_str()) == -1);
   } else {
