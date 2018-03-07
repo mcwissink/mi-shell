@@ -53,3 +53,7 @@ int Path::find(const std::string& program) const {
   // Return -1 since we didn't find any
   return -1;
 };
+
+std::string Path::buildPath(const std::string& path, const std::string& program) const {
+  return path + '/' + program;
+}

@@ -26,19 +26,17 @@ CommandLine::CommandLine(std::istream& in) {
 }
 
 /* getArgVector() const
- * returns argv
- * no parameters
+ * copies argv into a c string vector
+ * cargv, a vector of char*
  */
-std::vector<char*> CommandLine::getArgVector() const {
-  std::vector<char*> c_argv;
-
+void CommandLine::getArgVector(std::vector<char*>& cargv) const {
+  // Copy contents of argv into cargv, except for the ampersand
   for (size_t i = 0; i < argv.size(); i++) {
     if (argv[i] != "&")
-      c_argv.push_back(strdup(argv[i].c_str()));
+      cargv.push_back(strdup(argv[i].c_str()));
   }
-
-  c_argv.push_back(NULL);
-  return c_argv;
+  // Push back NULL is since argv is expected to have NULL pointer and the end
+  cargv.push_back(NULL);
 }
 
 /* noAmpersand() const

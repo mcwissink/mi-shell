@@ -44,15 +44,18 @@ void MIShell::run() {
       case  C_PWD: std::cout << prompt.get() << std::endl; break; // Print cwd
       case   C_CD: changeDirectory(cl, prompt); break; // Change directory
       case C_PROG: { // Run a program
-        int programPath = path.find(command);
-        if (programPath != -1) { // If we found a program
+        int i = path.find(command);
+        if (i != -1) { // If we found a program
           // Do the forking we learned in class
           pid_t pid = fork();
           if (pid < 0) {
             std::cerr << "Fork failed" << std::endl;
           } else if (pid == 0) {
             // Execute the command
-            execve((path.getDirectory(programPath) + '/' + command).c_str(), cl.getArgVector().data(), NULL);
+            std::vector<char*> argv;
+            cl.getArgVector(argv);
+            util::syserr(execve(path.buildPath(path.getDirectory(i), command).c_str(),
+                         argv.data(), NULL) == -1);
           } else {
             // If there is an ampersand, the signal handler should clean it up
             if (cl.noAmpersand()) {
@@ -72,7 +75,7 @@ void MIShell::run() {
 void MIShell::changeDirectory(const CommandLine& cl, const Prompt& prompt) {
   std::string dir = cl.getArgVector(1);
   if (dir == ".." || dir == ".") {
-    chdir((prompt.get() + "/" + dir).c_str());
+    util::syserr(chdir((prompt.get() + "/" + dir).c_str()));
   } else {
     chdir(dir.c_str());
   }
