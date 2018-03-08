@@ -41,7 +41,7 @@ int Path::find(const std::string& program) const {
     while ((dp = readdir(dir))) {
       // Compare the name in the dirent structure to program
       if (dp->d_name == program) {
-        closedir(dir);
+        util::syserr(closedir(dir) == -1);
         // Return the index of the current directory
         return i;
       }

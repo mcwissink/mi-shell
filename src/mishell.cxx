@@ -45,6 +45,8 @@ void MIShell::run() {
       std::cout << prompt.get() << std::endl; // Print cwd
     } else if (command == "cd") {
       changeDirectory(cl.getArgVector(1), prompt); // Change directory
+    } else if (command == "") {
+      ; // Do nothing
     } else {
       runProgram(cl, command); // Run a program
     }
@@ -62,11 +64,8 @@ void MIShell::runProgram(const CommandLine& cl, const std::string& command) {
     // Do the forking we learned in class
     util::syserr((pid = fork()) == -1);
     if (pid == 0) { // I am the child
-      // Get the arg vector
-      std::vector<char*> argv;
-      cl.getArgVector(argv);
       // Execute the command
-      util::syserr(execve(path.buildPath(path.getDirectory(i), command).c_str(), argv.data(), NULL) == -1);
+      util::syserr(execve(path.buildPath(path.getDirectory(i), command).c_str(), cl.getArgVector().data(), NULL) == -1);
     } else { // I am the parent
       if (cl.noAmpersand()) {
         util::syserr(waitpid(pid, NULL, 0) == -1);

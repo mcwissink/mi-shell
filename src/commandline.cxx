@@ -29,15 +29,17 @@ CommandLine::CommandLine(std::istream& in) {
  * copies argv into a c string vector
  * cargv, a vector of char*
  */
-void CommandLine::getArgVector(std::vector<char*>& cargv) const {
-  // Copy contents of argv into cargv, except for the ampersand
-  for (size_t i = 0; i < argv.size(); i++) {
-    if (argv[i] != "&")
-      cargv.push_back(strdup(argv[i].c_str()));
-  }
-  // Push back NULL is since argv is expected to have NULL pointer and the end
-  cargv.push_back(NULL);
-}
+ std::vector<char*> CommandLine::getArgVector() const {
+   std::vector<char*> cargv;
+   // Copy vector of strings into vector of char* for C
+   for (size_t i = 0; i < argv.size(); i++) {
+     if (argv[i] != "&")
+       cargv.push_back(strdup(argv[i].c_str()));
+   }
+   // Push back null since that is expected at end of C argv
+   cargv.push_back(NULL);
+   return cargv;
+ }
 
 /* noAmpersand() const
  * returns a bool: true if the last entry of argv is an ampersand, else false
