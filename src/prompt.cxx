@@ -15,6 +15,7 @@ extern "C" {
 /**
  * Get the current working directory
  * http://pubs.opengroup.org/onlinepubs/009695399/functions/getcwd.html
+ * TODO: Free the memory
  */
 Prompt::Prompt() {
   char *buf;  // Pointer to the buffer for storing path name
